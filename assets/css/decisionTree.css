@@ -100,6 +100,7 @@ textarea:focus {
 }
 
 .new-response {
+    display: block;
     height: 2.5em;
     width: 2.5em;
     border-radius: 50%;
@@ -197,4 +198,40 @@ textarea:focus {
     background: dodgerblue;
     color: white;
     text-shadow: none;
+}
+
+.message-box {
+    position: fixed;
+    top: 33%;
+    left: 10%;
+    width: 80%;
+    padding: 1em;
+    background: white;
+    color: black;
+    border: .25em solid firebrick;
+    animation: message-appear .2s;
+    z-index: 4;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgb(0,0,0,.5);
+    z-index: 3;
+}
+
+@keyframes message-appear {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.hidden-textarea {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    position: absolute;
+    left: -1000px;
 }

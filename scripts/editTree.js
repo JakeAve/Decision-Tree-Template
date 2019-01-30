@@ -164,14 +164,16 @@ function refreshPage(el) {
         //puts the cursor at the end of the textarea
         if (document.activeElement.tagName == 'TEXTAREA') {
             const savedVal = document.activeElement.value;
-            refreshBoxes();
-            Array.from(document.querySelectorAll('textarea')).forEach(textarea => {
-                if(textarea.value == savedVal && savedVal != '') {
-                    textarea.focus();
-                    textarea.value = '';
-                    textarea.value = savedVal;
-                }
-            });
+            if (savedVal != '') {
+                refreshBoxes();
+                Array.from(document.querySelectorAll('textarea')).forEach(textarea => {
+                    if(textarea.value == savedVal) {
+                        textarea.focus();
+                        textarea.value = '';
+                        textarea.value = savedVal;
+                    }
+                });
+            }
         } else refreshBoxes();
     }, 3000);
 };
@@ -201,38 +203,83 @@ function copyCurrentLocation() {
     return url
 };
 
-copyCurrentLocation();
+//dialog box is only shown on the first save
+var alreadyShowedMessage = false;
+function messageBox(path) {
+    //makes a dialog for the user to accept
+    const overlay = document.createElement('DIV');
+    overlay.className = 'overlay';
+    overlay.innerHTML = `<div class="message-box">You must save this file in: ${path}<br>The PATH is already copied to your clipboard.<br><button id="download" class="new-response">Ok</button></div>`;
+    document.body.append(overlay);
+    //the OK #download button triggers the download
+    document.querySelector('#download').addEventListener('click', () => {
+        document.body.removeChild(overlay);
+        alreadyShowedMessage = true;
+        download(getAllJson(), 'dataForTree', 'text/javascript');
+    });
+};
 
+//This will copy and paste whatever to put into it
+function copyStringToClipBoard(input) {
+    const string = input;
+    //create a textarea to copy the url to clipboard
+    const textarea = document.createElement('TEXTAREA');
+    textarea.className = 'hidden-textarea';
+    textarea.value = string;
+    document.body.append(textarea);
+    copy(textarea);
+    document.body.removeChild(textarea);
+};
+
+//The save button shows a dialog the first time. Downloads a JSON-like file
 document.querySelector('#save').addEventListener('click', () => {
     refreshBoxes();
-    download(getAllJson(), 'dataForTree', 'text/javascript');
+    const url = copyCurrentLocation().replace('Edit_Tree.html', 'data/');
+    copyStringToClipBoard(url);
+    !alreadyShowedMessage ? messageBox(url) : download(getAllJson(), 'dataForTree', 'text/javascript');
 });
 
+//Opens the Decision_Tree.html file
 document.querySelector('#test').addEventListener('click', () => {
     const url = copyCurrentLocation().replace('Edit_Tree','Decision_Tree');
     window.open(url);
 });
 
-document.querySelector('#copy').addEventListener('click', (e) => {
-    document.querySelector('#data-text').focus();
-    document.querySelector('#data-text').select();
+//copies an element that has selectable content
+function copy(element) {
+    element.focus();
+    element.select();
     document.execCommand('copy');
     if (window.getSelection) {window.getSelection().removeAllRanges();}
     else if (document.selection) {document.selection.empty();}
     document.querySelector('#data-text').blur();
-    e.target.style.animation = 'pop-in .5s';
-    setTimeout(() => {e.target.style.animation = ''}, 600);
+};
+
+//The main copy button copies the #data-text in case user cannot use the save function
+document.querySelector('#copy').addEventListener('click', (e) => {
+    refreshBoxes();
+    const btn = e.target;
+    copy(document.querySelector('#data-text'));
+    btn.style.animation = 'pop-in .5s';
+    setTimeout(() => {btn.style.animation = ''}, 600);
 });
 
+//Sets the first did to 1
 var didCount = 1;
+//This is the main array for the DecisionBoxes
 const decisionBoxes = [];
+//imports data if there is data in data/dataForTree.js. Otherwise, starts blank.
 if (data.dids.length) {
     data.dids.forEach((box, index) => {
+        //returns empty arrays for the nulls 
         decisionBoxes.push(new DecisionBox(Number(box.did), box.parent, box.content, box.responses ? box.responses : [], box.children ? box.children : []));
+        //will change didCount depending on what is imported
         index == data.dids.length - 1 ? didCount = Number(box.did) + 1 : null;
     })
 } else {
     decisionBoxes.push(new DecisionBox(didCount, null));
 }
+
+//initial display
 refreshBoxes();
 document.querySelector('textarea').focus();
