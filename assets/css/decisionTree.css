@@ -46,7 +46,7 @@ textarea:focus {
 .d-box-edit {
     /*display: block;*/
     width: 25em;
-    margin: 2.5em auto;
+    margin: 2.5em 5em;
     padding: 2em;
     background: rgb(255,255,255,.7);
     border: .5em solid #91B14E;
@@ -172,6 +172,13 @@ textarea:focus {
     padding: .5em;
     border: .15em solid firebrick;
     background: rgb(255,255,255,.7);
+}
+
+.small {
+    top: -8.5em;
+    left: calc(100% - 2em);
+    font-size: .5em;
+    padding: .25em;
 }
 
 #data-text {

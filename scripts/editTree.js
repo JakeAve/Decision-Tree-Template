@@ -12,7 +12,7 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
     this.makeResponseButtons = () => {
         let string = '';
         this.responses.forEach((response, index) => {
-            string += `<button class="d-response"><textarea placeholder="Response ${index + 1}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid(${this.did}).responses[${index}] = this.value; refreshPage(this);">${response}</textarea></button>`;
+            string += `<button class="d-response"><textarea placeholder="Response ${index + 1}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid(${this.did}).responses[${index}] = this.value; refreshPage(this);">${response}</textarea><button class="remove-box small" onclick="getBoxFromDid(${this.children[index]}).removeBox();")>x</button></button>`;
         });
         return string
     };
