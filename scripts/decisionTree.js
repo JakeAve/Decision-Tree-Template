@@ -15,7 +15,7 @@ function Box(box) {
     this.hideBox = () => {this.showing = false};
     
     this.getHTML = () => {
-        let output = `<div class="d-box"> ${this.content}\n`;
+        let output = `<div class="d-box">${this.content}\n`;
         if (this.responses) {
             output += `<div class="d-response-container">\n`
             for (let i = 0; i < this.responses.length; i ++) {

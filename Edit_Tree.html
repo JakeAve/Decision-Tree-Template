@@ -7,28 +7,34 @@
     <link rel="stylesheet" type="text/css" href="assets/css/decisionTree.css">
     <link rel="icon" href="assets/favicon.ico" type="image/png">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <title>Enrollment/Sponsor Decision Tree</title>
+    <title>Edit Tree</title>
 </head>
 <body>
     <div id="display"></div>
-    <button id="save" class="reset">Save</button>
+    <button id="save" class="reset">Save and Download</button>
     <button id="test" class="reset">Test</button>
     <textarea id="data-text"></textarea>
     <button id="copy" class="reset">Copy Data</button>
-    <!--<div class="formater-container">
+    <div class="formater-container">
         <div class="formater">
-            Add an image
-            <input placeholder="Enter the src">
-            <input placeholder="Any style attributes (width: 80%; margin: auto)">
-            <button>Get Image</button>
-        </div>
-        <div class="formater">
-            Add a link
+            Add a link tag
+            <br>
             <input placeholder="Enter the href">
             <input placeholder="Text to display">
-            <button>Get Link</button>
+            <button onclick="makeLink(this);">Get Link</button>
+            <input placeholder="link will be here">            
+            <button class="copy">Copy &lt;a&gt;</button>
         </div>
-    </div>-->
+        <div class="formater">
+            Add an image tag
+            <br>
+            <input placeholder="Enter the src">
+            <input placeholder="Style (width: 80%; margin: auto)">
+            <button onclick="makeImg(this);">Get Image</button>
+            <input placeholder="img will be here">
+            <button class="copy">Copy &lt;img&gt;</button>
+        </div>
+    </div>
     <script src="data/dataForTree.js"></script>
     <script src="scripts/editTree.js"></script>
 </body>

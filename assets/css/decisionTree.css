@@ -42,7 +42,7 @@ textarea:focus {
     box-shadow: 5px 5px 19px 1px rgba(0,0,0,0.25);
 }
 
-/*This needs to be different for the edit mode to avoid annoying animations*/
+/*This is a class for the edit mode to avoid annoying animations*/
 .d-box-edit {
     /*display: block;*/
     width: 25em;
@@ -179,10 +179,11 @@ textarea:focus {
     margin: auto;
     width: 80%;
     background: white;
+    white-space: nowrap;
 }
 
 .context {
-    padding-left: .5em;
+    padding: .5em;
     color: #808080;
     background: #f5f5f5;
     font-size: .75em;
@@ -202,7 +203,7 @@ textarea:focus {
 
 .message-box {
     position: fixed;
-    top: 33%;
+    top: 25%;
     left: 10%;
     width: 80%;
     padding: 1em;
@@ -234,4 +235,51 @@ textarea:focus {
     opacity: 0;
     position: absolute;
     left: -1000px;
+}
+
+.formater-container {
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    background: rgb(255,255,255,.7);
+    border: .25em solid black;
+    border-radius: .25em;
+    z-index: 3;
+}
+
+.formater {
+    margin: .5;
+    padding: .5em;
+}
+
+.formater:not(:first-of-type) {
+    border-top: .1em solid #808080;
+}
+
+.formater-container input {
+    display: block;
+    margin: .5em 0;
+}
+
+.formater-container button {
+    display: block;
+    margin: auto;
+    color: white;
+    border: .15em solid #91B14E;
+    background: #91B14E;
+    cursor: pointer;
+}
+
+.formater-container button:hover, .formater-container button:focus {
+    background: white;
+    color: #91B14E;
+}
+
+.formater-container .copy {
+    border-color: dodgerblue;
+    background: dodgerblue;
+}
+
+.formater-container .copy:hover, .formater-container .copy:hover  {
+    color: dodgerblue;
 }

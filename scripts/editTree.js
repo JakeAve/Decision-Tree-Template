@@ -6,7 +6,7 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
     this.children = children;
     this.selectedChild = null;
     this.getJson = () => {
-        return `{"did" : "${this.did}", "content" : "${this.content}", "responses" : ${this.responses.length ? `["${this.responses.join('", "')}"]` : null}, "children" : ${this.children.length ? `["${this.children.join('", "')}"]` : null}, "parent": ${this.parent ? `"${this.parent}"` : null}}`
+        return `{"did" : "${this.did}", "content" : "${this.content.replace(/"/g, '\\"').replace(/\n/g, '<br>')}", "responses" : ${this.responses.length ? `["${this.responses.join('", "')}"]` : null}, "children" : ${this.children.length ? `["${this.children.join('", "')}"]` : null}, "parent": ${this.parent ? `"${this.parent}"` : null}}`
     };
 
     this.makeResponseButtons = () => {
@@ -146,10 +146,9 @@ function getAllJson() {
     });
     const dataString = `const data = {\n\t"dids" : [\n\t\t${jsonData.join(',\n\t\t')} \n]};`;
     document.querySelector('#data-text').value = dataString;
-    document.querySelector('#data-text').rows = jsonData.length + 5;
+    document.querySelector('#data-text').rows = jsonData.length + 4;
     return dataString
 };
-
 
 
 //creates a variable for the timeout
@@ -175,7 +174,7 @@ function refreshPage(el) {
                 });
             }
         } else refreshBoxes();
-    }, 3000);
+    }, 5000);
 };
 
 // Function to download data to a file
@@ -203,19 +202,24 @@ function copyCurrentLocation() {
     return url
 };
 
-//dialog box is only shown on the first save
-var alreadyShowedMessage = false;
 function messageBox(path) {
     //makes a dialog for the user to accept
     const overlay = document.createElement('DIV');
     overlay.className = 'overlay';
-    overlay.innerHTML = `<div class="message-box">You must save this file in: ${path}<br>The PATH is already copied to your clipboard.<br><button id="download" class="new-response">Ok</button></div>`;
+    overlay.innerHTML = `<div class="message-box">You must save this file in: <b>${path}</b>
+    <ol>
+        <li>The PATH is already copied to your clipboard. Open a new file explorer and paste the PATH in the navigation.</li>
+        <li>In the browser, click "Show in Folder" and copy the new "dataForTree.js" to the old file in the PATH.</li>
+        <li>Replace the old file with the new one.</li>
+    </ol>
+    You can also copy the data manually and paste it into ${path}dataForTree.js
+    <button id="download" class="new-response">Ok</button>
+    </div>`;
     document.body.append(overlay);
     //the OK #download button triggers the download
     document.querySelector('#download').addEventListener('click', () => {
         document.body.removeChild(overlay);
-        alreadyShowedMessage = true;
-        download(getAllJson(), 'dataForTree', 'text/javascript');
+        //download(getAllJson(), 'dataForTree', 'text/javascript');
     });
 };
 
@@ -236,7 +240,8 @@ document.querySelector('#save').addEventListener('click', () => {
     refreshBoxes();
     const url = copyCurrentLocation().replace('Edit_Tree.html', 'data/');
     copyStringToClipBoard(url);
-    !alreadyShowedMessage ? messageBox(url) : download(getAllJson(), 'dataForTree', 'text/javascript');
+    messageBox(url);
+    //download(getAllJson(), 'dataForTree', 'text/javascript');
 });
 
 //Opens the Decision_Tree.html file
@@ -252,7 +257,7 @@ function copy(element) {
     document.execCommand('copy');
     if (window.getSelection) {window.getSelection().removeAllRanges();}
     else if (document.selection) {document.selection.empty();}
-    document.querySelector('#data-text').blur();
+    //element.blur();
 };
 
 //The main copy button copies the #data-text in case user cannot use the save function
@@ -263,6 +268,31 @@ document.querySelector('#copy').addEventListener('click', (e) => {
     btn.style.animation = 'pop-in .5s';
     setTimeout(() => {btn.style.animation = ''}, 600);
 });
+
+//copy buttons in the formater-container
+Array.from(document.querySelectorAll('.copy')).forEach(btn => {
+    btn.addEventListener('click', () => {
+        copy(btn.previousElementSibling);
+        btn.style.animation = 'pop-in .5s';
+        setTimeout(() => {btn.style.animation = ''}, 600);
+    });
+});
+
+//formater functions
+function makeLink(btn) {
+    const href = btn.previousElementSibling.previousElementSibling.value;
+    const text = btn.previousElementSibling.value;
+    const output = `<a href="${href}" target="_blank">${text}</a>`;
+    btn.nextElementSibling.value = output;
+
+};
+
+function makeImg(btn) {
+    const src = btn.previousElementSibling.previousElementSibling.value;
+    const styles = btn.previousElementSibling.value;
+    const output = `<img src="${src}" style="${styles == '' ? 'width: 100%;': styles}">`;
+    btn.nextElementSibling.value = output;
+};
 
 //Sets the first did to 1
 var didCount = 1;
