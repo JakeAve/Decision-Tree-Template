@@ -164,7 +164,7 @@ textarea:focus {
 
 .remove-box:hover::after {
     display: block;
-    content: "This button will erase this response and ALL its branches";
+    content: "Erase this response and ALL its branches";
     position: relative;
     left: 1em;
     top: 1em;
@@ -185,8 +185,11 @@ textarea:focus {
     display: block;
     margin: auto;
     width: 80%;
-    background: white;
+    font-size: .75em;
+    color: #ddd;
+    background: black;
     white-space: nowrap;
+    font-family: 'B612 Mono', monospace;
 }
 
 .context {
