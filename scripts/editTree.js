@@ -241,7 +241,7 @@ document.querySelector('#save').addEventListener('click', () => {
     const url = copyCurrentLocation().replace('Edit_Tree.html', 'data/');
     copyStringToClipBoard(url);
     messageBox(url);
-    //download(getAllJson(), 'dataForTree', 'text/javascript');
+    download(getAllJson(), 'dataForTree', 'text/javascript');
 });
 
 //Opens the Decision_Tree.html file
