@@ -157,7 +157,7 @@ textarea:focus {
     z-index: 2;
 }
 
-.remove-box:hover {
+.remove-box:hover, .remove-box:focus {
     color: firebrick;
     background: white;
 }
@@ -247,6 +247,26 @@ textarea:focus {
     left: -1000px;
 }
 
+.toggle-formater-container {
+    position: fixed;
+    top: .5em;
+    right: .5em;
+    height: 1.5em;
+    width: 1.5em;
+    font-size: 1em;
+    color: white;
+    background: firebrick;
+    border: .1em solid firebrick;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.toggle-formater-container:hover , .toggle-formater-container:focus {
+    color: firebrick;
+    background: white;
+}
+
 .formater-container {
     position: fixed;
     top: 1em;
@@ -255,6 +275,12 @@ textarea:focus {
     border: .25em solid black;
     border-radius: .25em;
     z-index: 3;
+}
+
+.invisible {
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
 }
 
 .formater {
