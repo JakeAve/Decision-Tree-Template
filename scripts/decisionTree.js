@@ -4,7 +4,7 @@ const boxes = [];
 
 //main constructor
 function Box(box) {
-    this.did = box.did;
+    this.did = box.did; //decision id 
     this.content = box.content;
     this.responses = box.responses;
     this.children = box.children;
@@ -46,7 +46,28 @@ function displayBoxes(arr) {
     document.querySelector('#display').innerHTML = output;
     const nodes = document.querySelectorAll('.d-box');
     const last = nodes[nodes.length - 1];
-    last.scrollIntoView();
+    last.scrollIntoView({behavior: 'smooth'});
+};
+
+//prints all of the steps and selectedChilds of the showing boxes
+//displays the information in the #data-text if it exists
+function printSummary(arr) {
+    const dataText = document.querySelector('#data-text');
+    if (dataText) {
+        let output = '';
+        let lineCount = 0;
+        arr.forEach(box => {
+            if (box.showing) {
+                //creates a dummy div so we only get the text conent and not images/link code
+                const div = document.createElement('div');
+                div.innerHTML = box.content;
+                //gets the text conent of the response and displays the selected child
+                output += `${++lineCount}.) ${div.textContent} ${box.selectedChild !== null ? ': ' + box.responses[box.selectedChild] : ''}\n`;
+            }
+        })
+        dataText.value = output;
+        dataText.rows = lineCount + 2;
+    }
 };
 
 //changes the button color, finds the new box to display
@@ -67,7 +88,7 @@ function selectResponse(originDid, selectedBtn, selectedDid) {
             boxes[i].showBox();
             //finds each parent from the new box to the top of the tree and shows
             let x = boxes[i];
-            let w = 0; //This makes sure the loop is not infinite
+            let w = 0; //This makes sure the loop is not infinite. Just in case!
             while (x.parent && w < 100) {
                 for (let i = 0; i < boxes.length; i ++) {
                     if (boxes[i].did == x.parent) {
@@ -81,7 +102,7 @@ function selectResponse(originDid, selectedBtn, selectedDid) {
     };
     //calls the displayBoxes function everytime button is clicked
     displayBoxes(boxes);
-
+    printSummary(boxes);//will not complete if there is no #data-text element
 };
 
 //initail call to show the top of the tree
