@@ -4,6 +4,10 @@
 
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background: url('../background-image.jpg');
     background-repeat: repeat-y;
@@ -67,10 +71,11 @@ textarea:focus {
 
 .d-response-container {
     margin-top: 1em;
-    display: grid;
 }
 
 .d-response {
+    display: block;
+    width: 100%;
     border: .15em solid;
     margin: .5em;
     padding: .5em;
@@ -89,6 +94,11 @@ textarea:focus {
     text-align: center;
     font-weight: bold;
     font-size: 1.1em;
+}
+
+.edit-response {
+    width: 80%;
+    display: inline-block;
 }
 
 /*This is the color the button turns when a response is chosen*/
@@ -175,11 +185,37 @@ textarea:focus {
 }
 
 .small {
-    top: -8.5em;
-    left: calc(100% - 2em);
+    position: static;
     font-size: .5em;
     padding: .25em;
 }
+
+.arrow-to-box {
+    color: white;
+    background: dodgerblue;
+    border: .15em solid dodgerblue;
+    height: 2em;
+    width: 2em;
+    cursor: pointer;
+}
+
+.arrow-to-box:hover {
+    background: white;
+    color: dodgerblue;
+}
+
+.arrow-to-box:hover::after {
+    display: block;
+    content: "Jump to this response";
+    position: relative;
+    left: 1em;
+    top: 1em;
+    width: 10em;
+    padding: .5em;
+    border: .15em solid dodgerblue;
+    background: rgb(255,255,255,.7);
+}
+
 
 #data-text {
     display: block;
@@ -197,6 +233,11 @@ textarea:focus {
     color: #808080;
     background: #f5f5f5;
     font-size: .75em;
+}
+
+.context a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .add-new-response {
