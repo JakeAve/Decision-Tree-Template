@@ -12,7 +12,11 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
     this.makeResponseButtons = () => {
         let string = '';
         this.responses.forEach((response, index) => {
-            string += `<button class="d-response" tabIndex="-1"><textarea placeholder="Response ${index + 1}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid(${this.did}).responses[${index}] = this.value; refreshPage(this);">${response}</textarea><button class="remove-box small" onclick="getBoxFromDid(${this.children[index]}).removeBox();")>x</button></button>`;
+            string += `<button class="d-response edit-response" tabIndex="-1">
+                    <textarea placeholder="Response ${index + 1}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid(${this.did}).responses[${index}] = this.value; refreshPage(this);">${response}</textarea>
+                </button>
+                <a href="#decision-box-number-${this.children[index]}"><button class="small arrow-to-box">&dArr;</button></a>
+                <button class="remove-box small" onclick="getBoxFromDid(${this.children[index]}).removeBox();"  tabIndex="-1")>x</button>`;
         });
         return string
     };
@@ -21,13 +25,13 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
         //displays the parent and the response selected to get to the current box. Allows you to edit the content, add responses, edit responses and remove the element
         //onkeydown the timeout is cleared to avoid refreshing the boxes prematurely
         //onkeyup the data is captured and saved to the object
-        return `<div class="d-box-edit">
+        return `<div class="d-box-edit"><a id="decision-box-number-${this.did}"></a>
         ${this.parent ? `<button class="remove-box" onclick="getBoxFromDid(${this.did}).removeBox()">x</button><br>` : ''}
-        <span class="context">Previous Question: ${this.getParent() ? this.getParent().content : 'None'}</span><br><span class="context">Previous Response: ${this.getParent() ? this.getParent().isChild(this) : 'None'}</span>
+        <div class="context">Previous Question: ${this.getParent() ? `<a title="Jump to previous question" href="#decision-box-number-${this.getParent().did}">${this.getParent().content} &uArr;</a>` : 'None'}<br>Previous Response: ${this.getParent() ? this.getParent().isChild(this) : 'None'}</div>
             <textarea placeholder="${this.parent ? `Click here to enter another question or resolution` : `Enter the first question here`}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid(${this.did}).content = this.value; refreshPage(this);">${this.content}</textarea>
             <div class="d-response-container">
                 ${this.responses ? this.makeResponseButtons() : ''}
-                ${this.parent ? '' : '<span class="add-new-response">Click the button to add a response</span>'}
+                ${this.parent ? '' : '<div class="add-new-response">Click the button to add a response</div>'}
                 <button class="new-response" onclick="getBoxFromDid(${this.did}).addNewResponse();">+</button>
             </div>
         </div>`
@@ -150,6 +154,9 @@ function getAllJson() {
     return dataString
 };
 
+function smoothScroll(el) {
+    document.getElementById(el).scrollIntoView({behavior : 'smooth', block : 'start'});
+};
 
 //creates a variable for the timeout
 var t;
