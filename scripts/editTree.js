@@ -315,8 +315,8 @@ if (data.dids.length) {
     data.dids.forEach((box, index) => {
         //returns empty arrays for the nulls 
         decisionBoxes.push(new DecisionBox(Number(box.did), box.parent, box.content, box.responses ? box.responses : [], box.children ? box.children : []));
-        //will change didCount depending on what is imported
-        index == data.dids.length - 1 ? didCount = Number(box.did) + 1 : null;
+        //will change didCount depending on what is imported. The didCount variable increments once a new response is added. 
+        index == data.dids.length - 1 ? didCount = Number(box.did) : null;
     })
 } else {
     decisionBoxes.push(new DecisionBox(didCount, null));
