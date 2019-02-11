@@ -50,10 +50,10 @@ function displayBoxes(arr) {
 };
 
 //prints all of the steps and selectedChilds of the showing boxes
-//displays the information in the #data-text if it exists
+//displays the information in the #summary-note if it exists
 function printSummary(arr) {
-    const dataText = document.querySelector('#data-text');
-    if (dataText) {
+    const summaryNote = document.querySelector('#summary-note');
+    if (summaryNote) {
         let output = '';
         let lineCount = 0;
         arr.forEach(box => {
@@ -65,8 +65,8 @@ function printSummary(arr) {
                 output += `${++lineCount}.) ${div.textContent} ${box.selectedChild !== null ? ': ' + box.responses[box.selectedChild] : ''}\n`;
             }
         })
-        dataText.value = output;
-        dataText.rows = lineCount + 2;
+        summaryNote.value = output;
+        summaryNote.rows = lineCount + 2;
     }
 };
 
@@ -109,11 +109,29 @@ function selectResponse(originDid, selectedBtn, selectedDid) {
 displayBoxes(boxes);
 
 //reset function
-document.querySelector('.reset').addEventListener('click', () => {
+document.querySelector('#reset').addEventListener('click', () => {
     boxes.forEach((box, index) => {
         index === 0 ? box.showBox() : box.hideBox();
         box.selectedChild = null;
     });
     displayBoxes(boxes);
     document.querySelector('.reset').blur();
+});
+
+//copies an element that has selectable content
+function copy(element) {
+    element.focus();
+    element.select();
+    document.execCommand('copy');
+    if (window.getSelection) {window.getSelection().removeAllRanges();}
+    else if (document.selection) {document.selection.empty();}
+    //element.blur();
+};
+
+//The main copy button copies the #summary-note in case user cannot use the save function
+document.querySelector('#copy').addEventListener('click', (e) => {
+    const btn = e.target;
+    copy(document.querySelector('#summary-note'));
+    btn.style.animation = 'pop-in .5s';
+    setTimeout(() => {btn.style.animation = ''}, 600);
 });
