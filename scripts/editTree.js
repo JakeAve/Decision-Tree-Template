@@ -25,9 +25,13 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
         //displays the parent and the response selected to get to the current box. Allows you to edit the content, add responses, edit responses and remove the element
         //onkeydown the timeout is cleared to avoid refreshing the boxes prematurely
         //onkeyup the data is captured and saved to the object
-        return `<div class="d-box-edit"><a id="decision-box-number-${this.did}"></a>
+        return `<div class="d-box-edit box-border"><a id="decision-box-number-${this.did}"></a>
         ${this.parent ? `<button class="remove-box" onclick="getBoxFromDid(${this.did}).removeBox()">x</button><br>` : ''}
-        <div class="context">Previous Question: ${this.getParent() ? `<a title="Jump to previous question" href="#decision-box-number-${this.getParent().did}">${this.getParent().content} &uArr;</a>` : 'None'}<br>Previous Response: ${this.getParent() ? this.getParent().isChild(this) : 'None'}</div>
+        <div class="context">Previous Question: ${this.getParent() ? this.getParent().content : 'None'}
+            ${this.getParent() ? `<a title="Jump to previous question" href="#decision-box-number-${this.getParent().did}"><button class="small arrow-to-box">&uArr;</button></a>` : ''}
+            <br>
+            Previous Response: ${this.getParent() ? this.getParent().isChild(this) : 'None'}
+        </div>
             <textarea placeholder="${this.parent ? `Click here to enter another question or resolution` : `Enter the first question here`}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid(${this.did}).content = this.value; refreshPage(this);">${this.content}</textarea>
             <div class="d-response-container">
                 ${this.responses ? this.makeResponseButtons() : ''}
@@ -152,10 +156,6 @@ function getAllJson() {
     document.querySelector('#data-text').value = dataString;
     document.querySelector('#data-text').rows = jsonData.length + 4;
     return dataString
-};
-
-function smoothScroll(el) {
-    document.getElementById(el).scrollIntoView({behavior : 'smooth', block : 'start'});
 };
 
 //creates a variable for the timeout
