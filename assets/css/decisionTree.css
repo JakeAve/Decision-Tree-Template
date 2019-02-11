@@ -31,7 +31,7 @@ textarea {
     border: none;
 }
 
-/*COLORS*/
+/*ACCENT COLORS*/
 /*Edit these to change the accent color of the tree*/
 
 /*The borders around each box*/
@@ -54,7 +54,7 @@ textarea:focus {
     outline: 1px solid #91B14E !important;
 }
 
-/*END OF COLORS*/
+/*END OF ACCENT COLORS*/
 
 .d-box {
     width: 25em;
