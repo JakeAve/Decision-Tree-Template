@@ -8,6 +8,7 @@ html {
     scroll-behavior: smooth;
 }
 
+/*The stationary background image*/
 body {
     background: url('../background-image.jpg');
     background-repeat: repeat-y;
@@ -30,28 +31,36 @@ textarea {
     border: none;
 }
 
-/*This only affects the Edit_Tree*/
-textarea:focus {
-    outline: 1px solid #91B14E;
+/*COLORS*/
+/*Edit these to change the accent color of the tree*/
+
+/*The borders around each box*/
+.box-border {
+    border: .5em solid #91B14E !important;
 }
+
+/*This is the lighter color that comes when you hover over a button*/
+.d-response:hover, .d-response:hover:focus {
+    background: #BFCE37 !important;
+}
+
+/*When a button is selected*/
+.selected {
+    background: #91B14E !important;
+}
+
+/*The box that goes around selected textareas*/
+textarea:focus {
+    outline: 1px solid #91B14E !important;
+}
+
+/*END OF COLORS*/
 
 .d-box {
     width: 25em;
     margin: 2.5em auto;
     padding: 2em;
     background: rgb(255,255,255,.7);
-    border: .5em solid #91B14E;
-    border-radius: 1em;
-    box-shadow: 5px 5px 19px 1px rgba(0,0,0,0.25);
-}
-
-/*This is a class for the edit mode to avoid annoying animations*/
-.d-box-edit {
-    width: 25em;
-    margin: 2.5em 5em;
-    padding: 2em;
-    background: rgb(255,255,255,.7);
-    border: .5em solid #91B14E;
     border-radius: 1em;
     box-shadow: 5px 5px 19px 1px rgba(0,0,0,0.25);
 }
@@ -67,10 +76,38 @@ textarea:focus {
    100% {opacity: 1; transform: translateY(0%)}
 }
 
+/*This is a class for the edit mode to avoid annoying animations*/
+.d-box-edit {
+    width: 25em;
+    margin: 2.5em 5em;
+    padding: 2em;
+    background: rgb(255,255,255,.7);
+    border-radius: 1em;
+    box-shadow: 5px 5px 19px 1px rgba(0,0,0,0.25);
+}
+
+.d-box-edit button textarea {
+    height: 1.5em;
+    resize: none;
+}
+
+.d-box-edit textarea {
+    resize: vertical;
+}
+
+/*Text that shows the previous question and previous response in edit_tree*/
+.context {
+    padding: .5em;
+    color: #808080;
+    background: #f5f5f5;
+    font-size: .75em;
+}
+
 .d-response-container {
     margin-top: 1em;
 }
 
+/*The buttons in each box*/
 .d-response {
     display: block;
     width: 100%;
@@ -83,17 +120,13 @@ textarea:focus {
     cursor: pointer;
 }
 
-/*This is the lighter color that comes when you hover*/
-.d-response:hover, .d-response:hover:focus {
-    background: #BFCE37;
-}
-
 .d-response textarea {
     text-align: center;
     font-weight: bold;
     font-size: 1.1em;
 }
 
+/*Less width for the edit-tree*/
 .edit-response {
     width: 80%;
     display: inline-block;
@@ -102,9 +135,15 @@ textarea:focus {
 /*This is the color the button turns when a response is chosen*/
 .selected {
     color: white;
-    background: #91B14E;
     box-shadow: 5px 5px 19px 1px rgba(0,0,0,0.25);
 
+}
+
+/*Add new response color in the edit-tree*/
+.add-new-response {
+    font-size: .75em;
+    color: orangered;
+    text-align: center;
 }
 
 .new-response {
@@ -114,22 +153,23 @@ textarea:focus {
     border-radius: 50%;
     margin: 1em auto 0 auto;
     color: white;
-    background: dodgerblue;
+    background: orangered;
     font-size: 1em;
-    border: .1em solid dodgerblue;
+    border: .1em solid orangered;
     cursor: pointer;
     transition: .2s;
 }
 
 .new-response:hover, .new-response:focus {
     background: white;
-    color: dodgerblue;
+    color: orangered;
 }
 
 .clear-btn:first-of-type {
     margin: 2em auto 1em auto;
 }
 
+/*The reset, save, and copy button*/
 .clear-btn {
     width: 25em;
     display: block;
@@ -149,8 +189,15 @@ textarea:focus {
     box-shadow: none;
 }
 
+/*button that indicates it will copy specific text*/
+#copy:hover {
+    background: dodgerblue;
+    color: white;
+    text-shadow: none;
+}
+
+/*The red buttons to remove rows*/
 .remove-box {
-    /*display: block;*/
     position: relative;
     left: calc(100% - 1em);
     top: -1em;
@@ -170,6 +217,7 @@ textarea:focus {
     background: white;
 }
 
+/*The tooltip box when you over over a remove-box*/
 .remove-box:hover::after {
     display: block;
     content: "Erase this response and ALL its branches";
@@ -182,39 +230,42 @@ textarea:focus {
     background: rgb(255,255,255,.7);
 }
 
+/*The buttons next to each new response in the edit-tree*/
 .small {
     position: static;
-    font-size: .5em;
-    padding: .25em;
-}
-
-.arrow-to-box {
-    color: white;
-    background: dodgerblue;
-    border: .15em solid dodgerblue;
     height: 2em;
     width: 2em;
+    font-size: .7em;
+    padding: .25em;
+    margin-bottom: 1em;
+}
+
+/*The buttons to jump to different boxes*/
+.arrow-to-box {
+    color: white;
+    background: mediumseagreen;
+    border: .15em solid mediumseagreen;
     cursor: pointer;
 }
 
 .arrow-to-box:hover {
     background: white;
-    color: dodgerblue;
+    color: mediumseagreen;
 }
 
 .arrow-to-box:hover::after {
     display: block;
-    content: "Jump to this response";
+    content: "Jump to this box";
     position: relative;
     left: 1em;
     top: 1em;
     width: 10em;
     padding: .5em;
-    border: .15em solid dodgerblue;
+    border: .15em solid mediumseagreen;
     background: rgb(255,255,255,.7);
 }
 
-
+/*The textarea with the string of JSON-like data in edit-tree*/
 #data-text {
     display: block;
     margin: auto;
@@ -226,18 +277,18 @@ textarea:focus {
     font-family: 'B612 Mono', monospace;
 }
 
+/*The summary note at the bottom of the Decision_Tree.html*/
 .summary-note-container {
     display: block;
     margin: auto;
     width: 80%;
     padding: 1em;
     background: rgb(255,255,255,.7);
-    border: .5em solid #91B14E;
     border-radius: 1em;
     box-shadow: 5px 5px 19px 1px rgba(0,0,0,0.25);
-
 }
 
+/*Mainly for color and font-family*/
 #summary-note {
     width: 100%;
     font-size: .75em;
@@ -247,30 +298,7 @@ textarea:focus {
     background: transparent;
 }
 
-.context {
-    padding: .5em;
-    color: #808080;
-    background: #f5f5f5;
-    font-size: .75em;
-}
-
-.context a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.add-new-response {
-    font-size: .75em;
-    color: dodgerblue;
-    text-align: center;
-}
-
-#copy:hover {
-    background: dodgerblue;
-    color: white;
-    text-shadow: none;
-}
-
+/*The big box when you click "save and download" in edit_tree*/
 .message-box {
     position: fixed;
     top: 25%;
@@ -307,6 +335,7 @@ textarea:focus {
     left: -1000px;
 }
 
+/*The box in the top right corner of edit_tree*/
 .toggle-formater-container {
     position: fixed;
     top: .5em;
@@ -337,6 +366,7 @@ textarea:focus {
     z-index: 3;
 }
 
+/*Hides the format box when the use clicks the - button*/
 .invisible {
     visibility: hidden;
     width: 0;
