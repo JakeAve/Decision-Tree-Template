@@ -36,7 +36,6 @@ textarea:focus {
 }
 
 .d-box {
-    /*display: block;*/
     width: 25em;
     margin: 2.5em auto;
     padding: 2em;
@@ -48,7 +47,6 @@ textarea:focus {
 
 /*This is a class for the edit mode to avoid annoying animations*/
 .d-box-edit {
-    /*display: block;*/
     width: 25em;
     margin: 2.5em 5em;
     padding: 2em;
@@ -128,11 +126,11 @@ textarea:focus {
     color: dodgerblue;
 }
 
-.reset:first-of-type {
-    margin: 5em auto 1em auto;
+.clear-btn:first-of-type {
+    margin: 2em auto 1em auto;
 }
 
-.reset {
+.clear-btn {
     width: 25em;
     display: block;
     margin: 1em auto;
@@ -145,7 +143,7 @@ textarea:focus {
     cursor: pointer;
 }
 
-.reset:hover {
+.clear-btn:hover {
     background: rgb(255,255,255,.15);
     text-shadow: 1px 1px 5px rgba(255, 255, 255, 1), 1px -1px 5px rgba(255, 255, 255, 1);
     box-shadow: none;
@@ -226,6 +224,27 @@ textarea:focus {
     background: black;
     white-space: nowrap;
     font-family: 'B612 Mono', monospace;
+}
+
+.summary-note-container {
+    display: block;
+    margin: auto;
+    width: 80%;
+    padding: 1em;
+    background: rgb(255,255,255,.7);
+    border: .5em solid #91B14E;
+    border-radius: 1em;
+    box-shadow: 5px 5px 19px 1px rgba(0,0,0,0.25);
+
+}
+
+#summary-note {
+    width: 100%;
+    font-size: .75em;
+    color: #202020;
+    white-space: nowrap;
+    font-family: 'B612 Mono', monospace;
+    background: transparent;
 }
 
 .context {
