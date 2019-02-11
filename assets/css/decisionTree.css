@@ -36,22 +36,22 @@ textarea {
 
 /*The borders around each box*/
 .box-border {
-    border: .5em solid #91B14E !important;
+    border: .5em solid #91B14E !important; /*Color 1*/
 }
 
 /*This is the lighter color that comes when you hover over a button*/
 .d-response:hover, .d-response:hover:focus {
-    background: #BFCE37 !important;
+    background: #BFCE37 !important; /*Color 2*/
 }
 
 /*When a button is selected*/
 .selected {
-    background: #91B14E !important;
+    background: #91B14E !important; /*Color 1*/
 }
 
 /*The box that goes around selected textareas*/
 textarea:focus {
-    outline: 1px solid #91B14E !important;
+    outline: 1px solid #91B14E !important; /*Color 1*/
 }
 
 /*END OF ACCENT COLORS*/
