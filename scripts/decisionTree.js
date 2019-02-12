@@ -1,4 +1,4 @@
-const input = data.dids;
+const pulledData = data.dids;
 const boxes = [];
 
 
@@ -13,36 +13,62 @@ function Box(box) {
     this.showing = !this.parent ? true : false; //the top of the tree displays by default
     this.showBox = () => {this.showing = true};
     this.hideBox = () => {this.showing = false};
-    
+    //returns the individual responses in individual buttons. When clicked the button passes information into the selectResponse function. 
+    this.getResponsesHTML = () => {
+        let resHtml = '<div class="d-response-container">\n';
+        this.responses.forEach((response, index) => {
+            resHtml += `\t<button class="d-response${this.selectedChild !== null ? index == this.selectedChild ? ' selected' : '' : ''}" onclick="selectResponse(${this.did}, ${this.children[index]}, ${index})">
+                ${response}
+            </button>\n`;
+        });
+        resHtml += '</div>\n'
+        return resHtml
+    };
+    //returns the box's html. Gets the responses if applicable.
     this.getHTML = () => {
-        let output = `<div class="d-box box-border">${this.content}\n`;
-        if (this.responses) {
-            output += `<div class="d-response-container">\n`
-            for (let i = 0; i < this.responses.length; i ++) {
-                //if the button has been selected, it will add the class 'selected', the paramaters in the selectResponse() make sure the right button is colored and the right new box displays 
-                output += `<button class="d-response${this.selectedChild !== null ? i == this.selectedChild ? ' selected' : '' : ''}" onclick="selectResponse(${this.did}, ${i}, ${this.children[i]})">${this.responses[i]}</button>\n`;
-            };
-            output += `</div>\n`;
-        }
-        output += `</div>\n`;
-        return output
+        return `<div class="d-box box-border">${this.content}
+            ${this.responses ? this.getResponsesHTML() : ''}
+        </div>`
     };
 };
 
-//constructs the Box objects
-for (let i = 0; i < input.length; i ++) {
-    boxes.push(new Box(input[i]));
+//changes the button color, finds the new box to display
+function selectResponse(originDid, selectedDid, selectedResponse) {
+    //finds the new box to display
+    boxes.forEach(box => {
+        //hides the box by default
+        box.hideBox();
+        //changes the selectedChild property using the originDid and selectedResponse
+        box.did == originDid ? box.selectedChild = selectedResponse : null;
+        if (box.did == selectedDid) {
+            //shows the new box that was just selected
+            box.showBox();
+            //finds each parent from the new box to the top of the tree and shows them
+            let x = box;
+            let w = 0; //This makes sure the loop is not infinite. Just in case!
+            while (x.parent && w < 100) {
+                boxes.forEach(boxNextLevel => {
+                    if (boxNextLevel.did == x.parent) {
+                        boxNextLevel.showBox();
+                        x = boxNextLevel;
+                    }
+                });
+                w ++;
+            };
+        }
+    });
+    //calls the displayBoxes function everytime button is clicked
+    displayBoxes(boxes);
+    printSummary(boxes);//will not complete if there is no #data-text element
 };
 
 //checks that the showing property is true for the boxes
 //then displays those boxes in the #display div
 function displayBoxes(arr) {
     let output = '';
-    for (let i = 0; i < arr.length; i ++) {
-        if (arr[i].showing) {
-            output += arr[i].getHTML();
-        }
-    };
+    arr.forEach(box => {
+        box.showing ? output += box.getHTML() : null;
+    });
     document.querySelector('#display').innerHTML = output;
     const nodes = document.querySelectorAll('.d-box');
     const last = nodes[nodes.length - 1];
@@ -70,44 +96,6 @@ function printSummary(arr) {
     }
 };
 
-//changes the button color, finds the new box to display
-function selectResponse(originDid, selectedBtn, selectedDid) {
-    //hides all the boxes
-    for (let i = 0; i < boxes.length; i ++) {
-        boxes[i].hideBox();
-    };
-    //changes the selectedChild property using the originDid and selectedBtn
-    for (let i = 0; i < boxes.length; i++) {
-        if (boxes[i].did == originDid) { 
-            boxes[i].selectedChild = selectedBtn;
-        }
-    };
-    //finds the new box to display
-    for (let i = 0; i < boxes.length; i++) {
-        if (boxes[i].did == selectedDid) {
-            boxes[i].showBox();
-            //finds each parent from the new box to the top of the tree and shows
-            let x = boxes[i];
-            let w = 0; //This makes sure the loop is not infinite. Just in case!
-            while (x.parent && w < 100) {
-                for (let i = 0; i < boxes.length; i ++) {
-                    if (boxes[i].did == x.parent) {
-                        boxes[i].showBox();
-                        x = boxes[i];
-                    }
-                };
-                w ++;
-            };
-        }
-    };
-    //calls the displayBoxes function everytime button is clicked
-    displayBoxes(boxes);
-    printSummary(boxes);//will not complete if there is no #data-text element
-};
-
-//initail call to show the top of the tree
-displayBoxes(boxes);
-
 //reset function
 document.querySelector('#reset').addEventListener('click', () => {
     boxes.forEach((box, index) => {
@@ -123,9 +111,11 @@ function copy(element) {
     element.focus();
     element.select();
     document.execCommand('copy');
-    if (window.getSelection) {window.getSelection().removeAllRanges();}
-    else if (document.selection) {document.selection.empty();}
-    //element.blur();
+    if (window.getSelection) {
+        window.getSelection().removeAllRanges();
+    } else if (document.selection) {
+        document.selection.empty();
+    }
 };
 
 //The main copy button copies the #summary-note in case user cannot use the save function
@@ -135,3 +125,11 @@ document.querySelector('#copy').addEventListener('click', (e) => {
     btn.style.animation = 'pop-in .5s';
     setTimeout(() => {btn.style.animation = ''}, 600);
 });
+
+//constructs the Box objects
+pulledData.forEach(item => {
+    boxes.push(new Box(item));
+});
+
+//initail call to show the top of the tree
+displayBoxes(boxes);
