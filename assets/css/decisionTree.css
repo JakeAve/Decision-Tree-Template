@@ -293,7 +293,6 @@ textarea:focus {
     width: 100%;
     font-size: .75em;
     color: #202020;
-    white-space: nowrap;
     font-family: 'B612 Mono', monospace;
     background: transparent;
 }
