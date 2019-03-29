@@ -87,8 +87,10 @@ function printSummary(arr) {
                 //creates a dummy div so we only get the text conent and not images/link code
                 const div = document.createElement('div');
                 div.innerHTML = box.content;
+                const anyImages = div.querySelector('img') ? `(image : ${Array.from(div.querySelectorAll('img')).map(img => img.src.split('/').pop()).join(', ')})` : '';
+                console.log(anyImages);
                 //gets the text conent of the response and displays the selected child
-                output += `${++lineCount}.) ${div.textContent} ${box.selectedChild !== null ? ': ' + box.responses[box.selectedChild] : ''}\n`;
+                output += `${++lineCount}.) ${div.textContent.replace(/\n/g, '') + anyImages} ${box.selectedChild !== null ? ': ' + box.responses[box.selectedChild] : ''}\n`;
             }
         })
         summaryNote.value = output;
