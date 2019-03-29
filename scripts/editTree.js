@@ -138,23 +138,16 @@ function findIndex(lookupDid) {
 
 //refreshes the boxes
 function refreshBoxes() {
-    let html = '';
-    decisionBoxes.forEach(box => {
-        html += box.getHTML();
-    });
-    document.querySelector('#display').innerHTML = html;
+    document.querySelector('#display').innerHTML = decisionBoxes.map(box => box.getHTML()).join('');
     getAllJson();
 };
 
 //prints out all of the boxes in a JSON format
 function getAllJson() {
-    const jsonData = [];
-    decisionBoxes.forEach(box => {
-        jsonData.push(box.getJson());
-    });
-    const dataString = `const data = {\n\t"dids" : [\n\t\t${jsonData.join(',\n\t\t')} \n]};`;
+    const jsonData = decisionBoxes.map(box => box.getJson()).join(',\n\t\t');
+    const dataString = `const data = {\n\t"dids" : [\n\t\t${jsonData} \n\t]\n};`;
     document.querySelector('#data-text').value = dataString;
-    document.querySelector('#data-text').rows = jsonData.length + 4;
+    document.querySelector('#data-text').rows = jsonData.match(/\n/g).length + 6;
     return dataString
 };
 
