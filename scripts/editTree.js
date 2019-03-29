@@ -205,8 +205,7 @@ function download(data, filename, type) {
 };
 
 function copyCurrentLocation() {
-    const url = window.location.href;
-    return url
+    return location.href.replace(location.hash, '')
 };
 
 function messageBox(path) {
