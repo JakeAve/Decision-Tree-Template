@@ -12,7 +12,7 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
                     <textarea placeholder="Response ${index + 1}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid('${this.did}').responses[${index}] = this.value; refreshPage(this);">${response}</textarea>
                 </button>
                 <a href="#decision-box-number-${this.children[index]}"><button class="small arrow-to-box">&dArr;</button></a>
-                <button class="remove-box small" onclick="getBoxFromDid(${this.children[index]}).removeBox();"  tabIndex="-1")>x</button>`;
+                <button class="remove-box small" onclick="getBoxFromDid('${this.children[index]}').removeBox();"  tabIndex="-1")>x</button>`;
         });
         return string
     };
