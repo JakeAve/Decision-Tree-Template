@@ -17,7 +17,7 @@ function Box(box) {
     this.getResponsesHTML = () => {
         let resHtml = '<div class="d-response-container">\n';
         this.responses.forEach((response, index) => {
-            resHtml += `\t<button class="d-response${this.selectedChild !== null ? index == this.selectedChild ? ' selected' : '' : ''}" onclick="selectResponse(${this.did}, ${this.children[index]}, ${index})">
+            resHtml += `\t<button class="d-response${this.selectedChild !== null ? index == this.selectedChild ? ' selected' : '' : ''}" onclick="selectResponse('${this.did}', '${this.children[index]}', ${index})">
                 ${response}
             </button>\n`;
         });
