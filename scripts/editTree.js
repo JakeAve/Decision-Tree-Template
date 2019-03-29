@@ -5,10 +5,6 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
     this.responses = responses;
     this.children = children;
     this.selectedChild = null;
-    this.getJson = () => {
-        return `{"did" : "${this.did}", "content" : "${this.content.replace(/"/g, '\\"').replace(/\n/g, '<br>')}", "responses" : ${this.responses.length ? `["${this.responses.join('", "')}"]` : null}, "children" : ${this.children.length ? `["${this.children.join('", "')}"]` : null}, "parent": ${this.parent ? `"${this.parent}"` : null}}`
-    };
-
     this.makeResponseButtons = () => {
         let string = '';
         this.responses.forEach((response, index) => {
@@ -154,12 +150,26 @@ function refreshBoxes() {
     getAllJson();
 };
 
-//prints out all of the boxes in a JSON format
+function makeJSONObject(did, content, responses, children, parent) {
+    this.did = did;
+    this.content = content;
+    this.responses = responses;
+    this.children = children;
+    this.parent = parent;
+};
+
+//prints out all of the boxes in a JSON format and saves to local storage
 function getAllJson() {
-    const jsonData = decisionBoxes.map(box => box.getJson()).join(',\n\t\t');
-    const dataString = `const data = {\n\t"dids" : [\n\t\t${jsonData} \n\t]\n};`;
+    const data = {
+        dids : decisionBoxes.map(box => new makeJSONObject(box.did, box.content, box.responses, box.children, box.parent))
+    }
+    const jsonData = JSON.stringify(data, null, 4);
+    localStorage.setItem('localStoredDecisionTree', jsonData);
+    
+    const dataString = `const data = ${jsonData};`;
     document.querySelector('#data-text').value = dataString;
-    document.querySelector('#data-text').rows = jsonData.match(/\n/g).length + 6;
+    document.querySelector('#data-text').rows = dataString.match(/\n/g).length + 2;
+    
     return dataString
 };
 
@@ -314,24 +324,56 @@ function makeImg(btn) {
 //var didCount = 1;
 //This is the main array for the DecisionBoxes
 const decisionBoxes = [];
-//imports data if there is data in data/dataForTree.js. Otherwise, starts blank.
-if (data.dids.length) {
-    data.dids.forEach((box, index) => {
+
+function populateDecisionBoxes(arr) {
+    arr.forEach(box => {
         //returns empty arrays for the nulls 
         decisionBoxes.push(new DecisionBox(
             box.did, 
             box.parent, 
             box.content, 
-            box.responses ? box.responses : [], 
-            box.children ? box.children : []
+            box.responses, 
+            box.children
         ));
         //will change didCount depending on what is imported. The didCount variable increments once a new response is added. 
         //index == data.dids.length - 1 ? didCount = Number(box.did) : null;
-    })
-} else {
-    decisionBoxes.push(new DecisionBox(makeNewId(), null));
+    });
+};
+
+
+//checks if the same decision tree is saved in local storage
+const localStoredDecisionTree = JSON.parse(localStorage.getItem('localStoredDecisionTree'));
+console.log(localStoredDecisionTree, data);
+
+if (JSON.stringify(localStoredDecisionTree) != JSON.stringify(data)) {
+    const localData = confirm('There is data from a decision tree in the browswer that is different from the dataForTree.js. Would you like to pull the data from the browser?')
+    if (localData === true)
+        populateDecisionBoxes(localStoredDecisionTree.dids);
+    else {
+        populateDecisionBoxes(data.dids);
+        localStorage.removeItem('localStoredDecisionTree');
+    }
 }
+//imports data if there is data in data/dataForTree.js. Otherwise, starts blank.
+else if (data.dids.length) 
+    populateDecisionBoxes(data.dids);
+ else 
+    decisionBoxes.push(new DecisionBox(makeNewId(), null));
+
 
 //initial display
 refreshBoxes();
 document.querySelector('textarea').focus();
+
+window.addEventListener('beforeunload', (e) => {
+    e.preventDefault();
+    const leavePage = confirm();
+    if (leavePage === true) {
+        return true
+    } else {
+        // Cancel the event
+        //e.preventDefault();
+        // Chrome requires returnValue to be set
+        e.returnValue = '';
+    }
+});
