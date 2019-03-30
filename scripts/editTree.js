@@ -9,7 +9,7 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
         let string = '';
         this.responses.forEach((response, index) => {
             string += `<button class="d-response edit-response" tabIndex="-1">
-                    <textarea placeholder="Response ${index + 1}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid('${this.did}').responses[${index}] = this.value; refreshPage(this);">${response}</textarea>
+                    <textarea placeholder="Response ${index + 1}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid('${this.did}').responses[${index}] = this.value; autoSave(this);">${response}</textarea>
                 </button>
                 <a href="#decision-box-number-${this.children[index]}"><button class="small arrow-to-box">&dArr;</button></a>
                 <button class="remove-box small" onclick="getBoxFromDid('${this.children[index]}').removeBox();"  tabIndex="-1")>x</button>`;
@@ -28,7 +28,7 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
             <br>
             Previous Response: ${this.parent ? this.getParent().isChild(this) : 'None'}
         </div>
-            <textarea placeholder="${this.parent ? `Click here to enter another question or resolution` : `Enter the first question here`}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid('${this.did}').content = this.value; refreshPage(this);">${this.content}</textarea>
+            <textarea placeholder="${this.parent ? `Click here to enter another question or resolution` : `Enter the first question here`}" onkeydown="clearTimeout(t);" onkeyup="getBoxFromDid('${this.did}').content = this.value; autoSave(this);">${this.content}</textarea>
             <div class="d-response-container">
                 ${this.responses ? this.makeResponseButtons() : ''}
                 ${this.parent ? '' : '<div class="add-new-response">Click the button to add a response</div>'}
@@ -176,7 +176,7 @@ function getAllJson() {
 //creates a variable for the timeout
 var t;
 //refreshes the page when a user has stopped typing for three seconds
-function refreshPage(el) {
+function autoSave(el) {
     //clears the timeout so work is not lost while typing
     clearTimeout(t);
     //waits before refreshing all of the data
@@ -320,32 +320,32 @@ function makeImg(btn) {
     btn.nextElementSibling.value = output;
 };
 
-//Sets the first did to 1
-//var didCount = 1;
 //This is the main array for the DecisionBoxes
 const decisionBoxes = [];
 
+//imports data from array. Otherwise, starts blank.
 function populateDecisionBoxes(arr) {
-    arr.forEach(box => {
-        //returns empty arrays for the nulls 
-        decisionBoxes.push(new DecisionBox(
-            box.did, 
-            box.parent, 
-            box.content, 
-            box.responses, 
-            box.children
-        ));
-        //will change didCount depending on what is imported. The didCount variable increments once a new response is added. 
-        //index == data.dids.length - 1 ? didCount = Number(box.did) : null;
-    });
+    if (arr.length)
+        arr.forEach(box => {
+            //returns empty arrays for the nulls 
+            decisionBoxes.push(new DecisionBox(
+                box.did, 
+                box.parent, 
+                box.content, 
+                box.responses, 
+                box.children
+            ));
+            //will change didCount depending on what is imported. The didCount variable increments once a new response is added. 
+            //index == data.dids.length - 1 ? didCount = Number(box.did) : null;
+        })
+    else 
+        decisionBoxes.push(new DecisionBox(makeNewId(), null));
 };
 
-
-//checks if the same decision tree is saved in local storage
+//checks for the local storage
 const localStoredDecisionTree = JSON.parse(localStorage.getItem('localStoredDecisionTree'));
-console.log(localStoredDecisionTree, data);
-
-if (JSON.stringify(localStoredDecisionTree) != JSON.stringify(data)) {
+//checks if the localStoredTree and dataForTree.js are the same
+if (localStoredDecisionTree !== null && JSON.stringify(localStoredDecisionTree) != JSON.stringify(data)) {
     const localData = confirm('There is data from a decision tree in the browswer that is different from the dataForTree.js. Would you like to pull the data from the browser?')
     if (localData === true)
         populateDecisionBoxes(localStoredDecisionTree.dids);
@@ -353,27 +353,19 @@ if (JSON.stringify(localStoredDecisionTree) != JSON.stringify(data)) {
         populateDecisionBoxes(data.dids);
         localStorage.removeItem('localStoredDecisionTree');
     }
-}
-//imports data if there is data in data/dataForTree.js. Otherwise, starts blank.
-else if (data.dids.length) 
-    populateDecisionBoxes(data.dids);
- else 
-    decisionBoxes.push(new DecisionBox(makeNewId(), null));
+} else populateDecisionBoxes(data.dids);
 
-
-//initial display
-refreshBoxes();
-document.querySelector('textarea').focus();
-
+//requires confirm before closing the page
 window.addEventListener('beforeunload', (e) => {
     e.preventDefault();
     const leavePage = confirm();
     if (leavePage === true) {
         return true
     } else {
-        // Cancel the event
-        //e.preventDefault();
-        // Chrome requires returnValue to be set
         e.returnValue = '';
     }
 });
+
+//initial display
+refreshBoxes();
+document.querySelector('textarea').focus();
