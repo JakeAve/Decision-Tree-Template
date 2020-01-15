@@ -64,7 +64,7 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
         const newDid = makeNewId();
         //creates a new child and response
         this.children.push(newDid);
-        this.responses.push(this.parent ? `Response ${this.responses.length + 1}` :  `Edit Response ${this.responses.length + 1} Here`);
+        this.responses.push(this.parent ? `Response ${this.responses.length + 1}` : `Edit Response ${this.responses.length + 1} Here`);
         //create a new box
         decisionBoxes.push(new DecisionBox(newDid, this.did));
         refreshBoxes();
@@ -92,7 +92,7 @@ function DecisionBox(did, parent, content = '', responses = [], children = []) {
             removables.forEach(value => {
                 indexes.push(findIndex(value));
             });
-            indexes.sort(function(a, b){return a - b});
+            indexes.sort(function (a, b) { return a - b });
             //deletes each of the boxes using the indexes array
             indexes.forEach((value, index) => {
                 decisionBoxes.splice(value - index, 1);
@@ -125,7 +125,7 @@ function getBoxFromDid(lookupDid) {
 function findIndex(lookupDid) {
     foundPos = null;
     decisionBoxes.forEach((box, index) => {
-        if(box.did == lookupDid) {
+        if (box.did == lookupDid) {
             foundPos = index;
         }
     });
@@ -135,10 +135,10 @@ function findIndex(lookupDid) {
 function makeNewId() {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
+
     for (var i = 0; i < 12; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
     if (!getBoxFromDid(text))
         return text
     else return makeNewId()
@@ -161,15 +161,15 @@ function makeJSONObject(did, content, responses, children, parent) {
 //prints out all of the boxes in a JSON format and saves to local storage
 function getAllJson() {
     const data = {
-        dids : decisionBoxes.map(box => new makeJSONObject(box.did, box.content, box.responses, box.children, box.parent))
+        dids: decisionBoxes.map(box => new makeJSONObject(box.did, box.content, box.responses, box.children, box.parent))
     }
     const jsonData = JSON.stringify(data, null, 4);
-    localStorage.setItem('localStoredDecisionTree', jsonData);
-    
+    if (lsAvailable()) localStorage.setItem('localStoredDecisionTree', jsonData);
+
     const dataString = `const data = ${jsonData};`;
     document.querySelector('#data-text').value = dataString;
     document.querySelector('#data-text').rows = dataString.match(/\n/g).length + 2;
-    
+
     return dataString
 };
 
@@ -188,7 +188,7 @@ function autoSave(el) {
             if (savedVal != '') {
                 refreshBoxes();
                 Array.from(document.querySelectorAll('textarea')).forEach(textarea => {
-                    if(textarea.value == savedVal) {
+                    if (textarea.value == savedVal) {
                         textarea.focus();
                         textarea.value = '';
                         textarea.value = savedVal;
@@ -201,9 +201,9 @@ function autoSave(el) {
 
 // Function to download data to a file
 function download(data, filename, type) {
-    var file = new Blob([data], {type: type});
+    var file = new Blob([data], { type: type });
     if (window.navigator.msSaveOrOpenBlob) // IE10+
-    window.navigator.msSaveOrOpenBlob(file, filename);
+        window.navigator.msSaveOrOpenBlob(file, filename);
     else { // Others
         const a = document.createElement("a");
         const location = new URL('/data/', copyCurrentLocation());
@@ -214,8 +214,8 @@ function download(data, filename, type) {
         a.click();
         setTimeout(() => {
             document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 };
 
@@ -267,7 +267,7 @@ document.querySelector('#save').addEventListener('click', () => {
 
 //Opens the Decision_Tree.html file
 document.querySelector('#test').addEventListener('click', () => {
-    const url = copyCurrentLocation().replace('Edit_Tree','Decision_Tree');
+    const url = copyCurrentLocation().replace('Edit_Tree', 'Decision_Tree');
     window.open(url);
 });
 
@@ -276,8 +276,8 @@ function copy(element) {
     element.focus();
     element.select();
     document.execCommand('copy');
-    if (window.getSelection) {window.getSelection().removeAllRanges();}
-    else if (document.selection) {document.selection.empty();}
+    if (window.getSelection) { window.getSelection().removeAllRanges(); }
+    else if (document.selection) { document.selection.empty(); }
     //element.blur();
 };
 
@@ -287,7 +287,7 @@ document.querySelector('#copy').addEventListener('click', (e) => {
     const btn = e.target;
     copy(document.querySelector('#data-text'));
     btn.style.animation = 'pop-in .5s';
-    setTimeout(() => {btn.style.animation = ''}, 600);
+    setTimeout(() => { btn.style.animation = '' }, 600);
 });
 
 //copy buttons in the formater-container
@@ -295,7 +295,7 @@ Array.from(document.querySelectorAll('.copy')).forEach(btn => {
     btn.addEventListener('click', () => {
         copy(btn.previousElementSibling);
         btn.style.animation = 'pop-in .5s';
-        setTimeout(() => {btn.style.animation = ''}, 600);
+        setTimeout(() => { btn.style.animation = '' }, 600);
     });
 });
 
@@ -316,7 +316,7 @@ function makeLink(btn) {
 function makeImg(btn) {
     const src = btn.previousElementSibling.previousElementSibling.value;
     const styles = btn.previousElementSibling.value;
-    const output = `<img src="${src}" style="${styles == '' ? 'width: 100%;': styles}">`;
+    const output = `<img src="${src}" style="${styles == '' ? 'width: 100%;' : styles}">`;
     btn.nextElementSibling.value = output;
 };
 
@@ -329,30 +329,43 @@ function populateDecisionBoxes(arr) {
         arr.forEach(box => {
             //returns empty arrays for the nulls 
             decisionBoxes.push(new DecisionBox(
-                box.did, 
-                box.parent, 
-                box.content, 
-                box.responses, 
+                box.did,
+                box.parent,
+                box.content,
+                box.responses,
                 box.children
             ));
             //will change didCount depending on what is imported. The didCount variable increments once a new response is added. 
             //index == data.dids.length - 1 ? didCount = Number(box.did) : null;
         })
-    else 
+    else
         decisionBoxes.push(new DecisionBox(makeNewId(), null));
 };
 
-//checks for the local storage
-const localStoredDecisionTree = JSON.parse(localStorage.getItem('localStoredDecisionTree'));
-//checks if the localStoredTree and dataForTree.js are the same
-if (localStoredDecisionTree !== null && JSON.stringify(localStoredDecisionTree) != JSON.stringify(data)) {
-    const localData = confirm('There is data from a decision tree in the browswer that is different from the dataForTree.js. Would you like to pull the data from the browser?')
-    if (localData === true)
-        populateDecisionBoxes(localStoredDecisionTree.dids);
-    else {
-        populateDecisionBoxes(data.dids);
-        localStorage.removeItem('localStoredDecisionTree');
+function lsAvailable() {
+    try {
+        const test = 'test';
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+    } catch {
+        return false;
     }
+}
+
+if (lsAvailable()) {
+    //checks for the local storage
+    const localStoredDecisionTree = JSON.parse(localStorage.getItem('localStoredDecisionTree'));
+    //checks if the localStoredTree and dataForTree.js are the same
+    if (localStoredDecisionTree && JSON.stringify(localStoredDecisionTree) !== JSON.stringify(data)) {
+        const localData = confirm('There is data from a decision tree in the browswer that is different from the dataForTree.js. Would you like to pull the data from the browser?')
+        if (localData === true)
+            populateDecisionBoxes(localStoredDecisionTree.dids);
+        else {
+            populateDecisionBoxes(data.dids);
+            localStorage.removeItem('localStoredDecisionTree');
+        }
+    } else populateDecisionBoxes(data.dids);
 } else populateDecisionBoxes(data.dids);
 
 //requires confirm before closing the page
